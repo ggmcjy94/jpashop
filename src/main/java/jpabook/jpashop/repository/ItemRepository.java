@@ -20,6 +20,9 @@ public class ItemRepository {
             em.persist(item);
         } else {
             //update
+            //merge 는 속성 전부 다 변경 된다.
+            // setting 을 안해주면 null 로 변경됌
+            //실무에서는 잘 안씀
             em.merge(item);
         }
     }
