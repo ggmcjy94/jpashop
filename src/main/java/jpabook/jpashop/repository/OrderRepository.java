@@ -98,7 +98,7 @@ public class OrderRepository {
         return query.getResultList();
     }
 
-    public List<Order> findAllWithMemberDelivery() {
+    public List<Order> findAllWithMemberDelivery() { // 이정도는 엔티티에서 가져와서 써도 괜찮음 페치 조인
         return em.createQuery(
                 "select o from Order o" +
                         " join fetch o.member m" +
@@ -107,14 +107,13 @@ public class OrderRepository {
     }
 
 
-    public List<OrderSimpleQueryDTO> findOrderDtos() {
+    public List<Order> findAllWithItem() {
         return em.createQuery(
-                "select new jpabook.jpashop.repository.OrderSimpleQueryDTO(o.id, m.name, o.orderDate, o.status, d.address) " +
-                        "from Order o" +
-                        " join o.member m" +
-                        " join o.delivery d", OrderSimpleQueryDTO.class
-                ).getResultList();
+                "select distinct o from Order o" + //jpa distinct 는 중복을 제거 해줌 sql 은 distinct 는 아예 값이 똑같아야 됌
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderItems oi" +
+                        " join fetch oi.item i", Order.class
+        ).getResultList();
     }
-
-
 }
