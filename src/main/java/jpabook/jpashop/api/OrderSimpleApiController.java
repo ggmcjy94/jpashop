@@ -5,6 +5,7 @@ import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.OrderSimpleQueryDTO;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,8 +42,22 @@ public class OrderSimpleApiController {
         List<Order> orders = orderRepository.findAllByString(new OrderSearch());
         List<SimpleOrderDTO> result = orders.stream()
                 .map(o -> new SimpleOrderDTO(o))
-                .collect(Collectors.toList());
+                .collect(Collectors  .toList());
         return result;
+    }
+
+
+    @GetMapping("/api/v3/simple-orders")
+    public List<SimpleOrderDTO> ordersV3() { //fetch join 지연 로딩 x 재사용성 가능
+        List<Order> orders = orderRepository.findAllWithMemberDelivery();
+        List<SimpleOrderDTO> result = orders.stream().map(o -> new SimpleOrderDTO(o)).collect(Collectors.toList());
+        return result;
+    }
+
+
+    @GetMapping("/api/v4/simple-orders")
+    public List<OrderSimpleQueryDTO> ordersV4() {  // 재사용성 불가 하지만 성능은 v3 보다 좋음
+        return orderRepository.findOrderDtos();
     }
 
     @Data
