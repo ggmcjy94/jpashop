@@ -6,6 +6,7 @@ spring:
       driver-class-name: org.h2.Driver
 
   jpa:
+
     hibernate:
       ddl-auto: create
     properties:
@@ -14,6 +15,9 @@ spring:
         format_sql: true
         # in query 의 갯수
         default_batch_fetch_size: 100
+    # 이걸 false 를 할경우 service repository 까지만 영속성 컨텍스트가 살아있어 살아있는 곳에서 지연로딩 로직을 짜줘야함
+    open-in-view: false
+
 
 
 looging:
